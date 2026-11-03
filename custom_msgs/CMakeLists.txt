@@ -25,6 +25,7 @@ endif()
 # Generate service from srv file
 rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/CheckEvenOdd.srv"
+  "srv/SetJointConfiguration.srv"
   "action/Fibonacci.action"
 )
 
