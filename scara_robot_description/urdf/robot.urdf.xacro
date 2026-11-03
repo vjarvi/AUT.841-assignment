@@ -1,0 +1,42 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="SCARAbot">
+
+    <xacro:include filename="$(find scara_robot_description)/urdf/robot_arm.urdf.xacro"/>
+    <xacro:include filename="$(find scara_robot_description)/urdf/robot_gripper.urdf.xacro"/>
+
+    <xacro:arg name="column_height" default="1.0"/>
+    <xacro:arg name="upper_arm_length" default="1.0"/>
+    <xacro:arg name="forearm_length" default="1.0"/>
+    <xacro:arg name="forearm_z_offset" default="0.2"/>
+    <xacro:arg name="quill_length" default="1.0"/>
+    <xacro:arg name="finger_length" default="0.15"/>
+    <xacro:arg name="shoulder_limit" default="${pi/2}"/>
+    <xacro:arg name="elbow_limit" default="${pi/2}"/>
+    <xacro:arg name="wrist_limit" default="${pi}"/>
+    <xacro:arg name="quill_lower" default="-0.4"/>
+    <xacro:arg name="quill_upper" default="0.3"/>
+    <xacro:arg name="finger_min" default="0.02"/>
+    <xacro:arg name="finger_stroke" default="0.1"/>
+
+    <xacro:property name="quill_length" value="$(arg quill_length)"/>
+
+    <link name="world"/>
+
+    <xacro:scara_arm parent_link="world" xyz="0 0 0" rpy="0 0 0"
+                     column_height="$(arg column_height)"
+                     upper_arm_length="$(arg upper_arm_length)"
+                     forearm_length="$(arg forearm_length)"
+                     forearm_z_offset="$(arg forearm_z_offset)"
+                     quill_length="${quill_length}"
+                     shoulder_limit="$(arg shoulder_limit)"
+                     elbow_limit="$(arg elbow_limit)"
+                     wrist_limit="$(arg wrist_limit)"
+                     quill_lower="$(arg quill_lower)"
+                     quill_upper="$(arg quill_upper)"/>
+
+    <xacro:scara_gripper parent_link="link_5" xyz="0 0 ${-quill_length/2}" rpy="0 0 0"
+                         finger_length="$(arg finger_length)"
+                         finger_min="$(arg finger_min)"
+                         finger_stroke="$(arg finger_stroke)"/>
+
+</robot>

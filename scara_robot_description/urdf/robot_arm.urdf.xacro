@@ -1,0 +1,116 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="arm">
+    <xacro:macro name="scara_arm" params="parent_link:='world' xyz:='0 0 0' rpy:='0 0 0'
+                                         column_height:='1.0' upper_arm_length:='1.0' forearm_length:='1.0'
+                                         forearm_z_offset:='0.2' quill_length:='1.0'
+                                         shoulder_limit:='${pi/2}' elbow_limit:='${pi/2}' wrist_limit:='${pi}'
+                                         quill_lower:='-0.5' quill_upper:='0.3'">
+
+        <joint name="world_base_link_joint" type="fixed">
+            <origin rpy="${rpy}" xyz="${xyz}"/>
+            <parent link="${parent_link}"/>
+            <child link="base_link"/>
+        </joint>
+        <link name="base_link">
+            <visual>
+                <origin rpy="0 0 0" xyz="0 0 ${column_height/2}" />
+                <geometry>
+                    <cylinder radius="0.1" length="${column_height}" />
+                </geometry>
+                <material name="Blue">
+                    <color rgba="0.0 0.0 1.0 1.0" />
+                </material>
+            </visual>
+        </link>
+        <joint name="joint_1" type="revolute">
+            <parent link="base_link"/>
+            <child link="link_1"/>
+            <origin xyz="0 0 ${column_height}" rpy="0 0 0"/>
+            <axis xyz="0 0 1"/>
+            <limit lower="${-shoulder_limit}" upper="${shoulder_limit}" effort="10.0" velocity="1.0"/>
+        </joint>
+        <link name="link_1">
+            <visual>
+                <origin xyz="${upper_arm_length/2} 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <box size="${upper_arm_length} 0.2 0.2"/>
+                </geometry>
+                <material name="Green">
+                    <color rgba="0.0 1.0 0.0 1.0" />
+                </material>
+            </visual>
+        </link>
+        <joint name="joint_2" type="revolute">
+            <parent link="link_1"/>
+            <child link="link_2"/>
+            <origin xyz="${upper_arm_length} 0 0" rpy="0 0 0"/>
+            <axis xyz="0 0 1"/>
+            <limit lower="${-elbow_limit}" upper="${elbow_limit}" effort="10.0" velocity="1.0"/>
+        </joint>
+        <link name="link_2">
+            <visual>
+                <origin rpy="0 0 0" xyz="0 0 ${forearm_z_offset/2}" />
+                <geometry>
+                    <cylinder radius="0.1" length="${forearm_z_offset + 0.2}" />
+                </geometry>
+                <material name="Blue">
+                    <color rgba="0.0 0.0 1.0 1.0" />
+                </material>
+            </visual>
+        </link>
+        <joint name="fixed_joint_1" type="fixed">
+            <parent link="link_2"/>
+            <child link="link_3"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </joint>
+        <link name="link_3">
+            <visual>
+                <origin xyz="${forearm_length/2} 0 ${forearm_z_offset}" rpy="0 0 0" />
+                <geometry>
+                    <box size="${forearm_length} 0.2 0.2" />
+                </geometry>
+                <material name="Green">
+                    <color rgba="0.0 1.0 0.0 1.0" />
+                </material>
+            </visual>
+        </link>
+        <joint name="joint_3" type="revolute">
+            <parent link="link_2"/>
+            <child link="link_4"/>
+            <origin xyz="${forearm_length} 0 ${forearm_z_offset}" rpy="0 0 0"/>
+            <axis xyz="0 0 1"/>
+            <limit lower="${-wrist_limit}" upper="${wrist_limit}" effort="10.0" velocity="1.0"/>
+        </joint>
+        <link name="link_4">
+            <visual>
+                <origin rpy="0 0 0" xyz="0 0 0" />
+                <geometry>
+                    <cylinder radius="0.15" length="0.2" />
+                </geometry>
+                <material name="Blue">
+                    <color rgba="0.0 0.0 1.0 1.0" />
+                </material>
+            </visual>
+        </link>
+        <joint name="joint_4" type="prismatic">
+            <parent link="link_4"/>
+            <child link="link_5"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <axis xyz="0 0 1"/>
+            <limit lower="${quill_lower}" upper="${quill_upper}" effort="10" velocity="0.1"/>
+        </joint>
+        <link name="link_5">
+            <visual>
+                <origin rpy="0 0 0" xyz="0 0 0" />
+                <geometry>
+                    <cylinder radius="0.05" length="${quill_length}" />
+                </geometry>
+                <material name="Black">
+                    <color rgba="0.0 0.0 0.0 1.0" />
+                </material>
+            </visual>
+        </link>
+        
+    </xacro:macro>
+    
+</robot>
