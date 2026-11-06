@@ -17,6 +17,9 @@ class JointConfigurationServer(Node):
         self.joint_limits = [(-math.pi/2, math.pi/2), (-math.pi/2, math.pi/2), (-math.pi, math.pi),
                             (-0.4, 0.3), (0.02, 0.12), (-0.12, -0.02)]
 
+        # Home pose: centered arm, quill at zero, gripper fully open.
+        self.initial_positions = [0.0, 0.0, 0.0, 0.0, 0.02, -0.02]
+
         self.publisher = self.create_publisher(JointState, '/joint_states', 10)
         self.srv = self.create_service(
             SetJointConfiguration,
@@ -62,6 +65,8 @@ def main(args=None):
     rclpy.init(args=args)
     node = JointConfigurationServer()
     try:
+         # Publish initial position immediately to update GUI
+        node.publish_configuration(node.initial_positions)
         rclpy.spin(node)
     except KeyboardInterrupt:
         pass
