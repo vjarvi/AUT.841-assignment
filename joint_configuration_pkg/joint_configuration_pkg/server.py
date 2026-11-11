@@ -33,7 +33,7 @@ class JointConfigurationServer(Node):
         positions = list(request.positions)
         self.get_logger().info(f'Received joint positions: {positions}')
 
-        # Validate each requested joint position against limist
+        # Validate each requested joint position against limits
         response.success = False
         joint_count = len(self.joint_limits)
 
@@ -46,9 +46,9 @@ class JointConfigurationServer(Node):
                     response.message = f"Received illegal configuration for joint {i + 1}, must be in range ({minimum}, {maximum})"
                     return response
 
-        response.success = True
-        response.message = "Joint configuration validated"
-        self.publish_configuration(positions)
+            response.success = True
+            response.message = "Joint configuration validated"
+            self.publish_configuration(positions)
         
         return response
 
